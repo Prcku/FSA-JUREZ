@@ -1,6 +1,32 @@
+# Stage 1
+
+FROM node:10-alpine as build-step
+
+RUN mkdir -p /app
+
+WORKDIR /app
+
+COPY package.json /app
+
+RUN npm install
+
+COPY . /app
+
+RUN npm run build --prod
+
+# Stage 2
+
 FROM nginx:1.17.1-alpine
-COPY nginx.conf /etc/nginx/nginx.conf
-COPY /dist/aston-villa-app /usr/share/nginx/html
+
+COPY --from=build-step /dist/first-app /usr/share/nginx/html
+
+
+
+#FROM nginx:1.17.1-alpine
+#COPY nginx.conf /etc/nginx/nginx.conf
+#COPY /dist/first-app /usr/share/nginx/html
+
+
 
 #asdhoaskdoaskd
 ##### Stage 1: Build the angular application
